@@ -1,6 +1,6 @@
 # BadStick — An Xbox 360 USB Setup Tool for the BadUpdate Exploit
 
-![BadStick V1.2B](https://i.imgur.com/Ikcxp9o.png)
+![BadStick V1.2B](https://i.imgur.com/ZuZjZ9N.png)
 
 ## Purpose & Overview
 
