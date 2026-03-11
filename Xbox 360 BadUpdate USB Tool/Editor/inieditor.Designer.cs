@@ -32,28 +32,28 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(inieditor));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.launchReturn = new System.Windows.Forms.Button();
             this.newlaunchiniBtn = new System.Windows.Forms.Button();
             this.launchiniOpen = new System.Windows.Forms.Button();
             this.launchiniClear = new System.Windows.Forms.Button();
             this.launchiniSave = new System.Windows.Forms.Button();
             this.launchinieditor = new FastColoredTextBoxNS.FastColoredTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.jrpcReturn = new System.Windows.Forms.Button();
             this.newjrpciniBtn = new System.Windows.Forms.Button();
             this.jrpcOpen = new System.Windows.Forms.Button();
             this.jrpcClear = new System.Windows.Forms.Button();
             this.jrpcSave = new System.Windows.Forms.Button();
             this.jrpcinieditor = new FastColoredTextBoxNS.FastColoredTextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.xbdmReturn = new System.Windows.Forms.Button();
             this.newxbdminiBtn = new System.Windows.Forms.Button();
             this.xbdmOpen = new System.Windows.Forms.Button();
             this.xbdmClear = new System.Windows.Forms.Button();
             this.xbdmSave = new System.Windows.Forms.Button();
             this.xbdminieditor = new FastColoredTextBoxNS.FastColoredTextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.shelbylabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.xbdmReturn = new System.Windows.Forms.Button();
-            this.jrpcReturn = new System.Windows.Forms.Button();
-            this.launchReturn = new System.Windows.Forms.Button();
+            this.VerLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.launchinieditor)).BeginInit();
@@ -90,6 +90,16 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Launch.ini";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // launchReturn
+            // 
+            this.launchReturn.Location = new System.Drawing.Point(636, 339);
+            this.launchReturn.Name = "launchReturn";
+            this.launchReturn.Size = new System.Drawing.Size(86, 45);
+            this.launchReturn.TabIndex = 14;
+            this.launchReturn.Text = "Return";
+            this.launchReturn.UseVisualStyleBackColor = true;
+            this.launchReturn.Click += new System.EventHandler(this.launchReturn_Click);
             // 
             // newlaunchiniBtn
             // 
@@ -186,6 +196,16 @@
             this.tabPage2.Text = "JRPC.ini";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // jrpcReturn
+            // 
+            this.jrpcReturn.Location = new System.Drawing.Point(638, 339);
+            this.jrpcReturn.Name = "jrpcReturn";
+            this.jrpcReturn.Size = new System.Drawing.Size(86, 45);
+            this.jrpcReturn.TabIndex = 14;
+            this.jrpcReturn.Text = "Return";
+            this.jrpcReturn.UseVisualStyleBackColor = true;
+            this.jrpcReturn.Click += new System.EventHandler(this.jrpcReturn_Click);
+            // 
             // newjrpciniBtn
             // 
             this.newjrpciniBtn.Location = new System.Drawing.Point(638, 121);
@@ -240,7 +260,7 @@
         '\'',
         '\''};
             this.jrpcinieditor.AutoIndentCharsPatterns = "\n^\\s*\\$[\\w\\.\\[\\]\\\'\\\"]+\\s*(?<range>=)\\s*(?<range>[^;]+);\n";
-            this.jrpcinieditor.AutoScrollMinSize = new System.Drawing.Size(25, 12);
+            this.jrpcinieditor.AutoScrollMinSize = new System.Drawing.Size(2, 12);
             this.jrpcinieditor.BackBrush = null;
             this.jrpcinieditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.jrpcinieditor.BracketsHighlightStrategy = FastColoredTextBoxNS.BracketsHighlightStrategy.Strategy2;
@@ -279,6 +299,16 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "XBDM.ini";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // xbdmReturn
+            // 
+            this.xbdmReturn.Location = new System.Drawing.Point(638, 339);
+            this.xbdmReturn.Name = "xbdmReturn";
+            this.xbdmReturn.Size = new System.Drawing.Size(86, 45);
+            this.xbdmReturn.TabIndex = 13;
+            this.xbdmReturn.Text = "Return";
+            this.xbdmReturn.UseVisualStyleBackColor = true;
+            this.xbdmReturn.Click += new System.EventHandler(this.xbdmReturn_Click);
             // 
             // newxbdminiBtn
             // 
@@ -334,7 +364,7 @@
         '\'',
         '\''};
             this.xbdminieditor.AutoIndentCharsPatterns = "\n^\\s*\\$[\\w\\.\\[\\]\\\'\\\"]+\\s*(?<range>=)\\s*(?<range>[^;]+);\n";
-            this.xbdminieditor.AutoScrollMinSize = new System.Drawing.Size(25, 12);
+            this.xbdminieditor.AutoScrollMinSize = new System.Drawing.Size(2, 12);
             this.xbdminieditor.BackBrush = null;
             this.xbdminieditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.xbdminieditor.BracketsHighlightStrategy = FastColoredTextBoxNS.BracketsHighlightStrategy.Strategy2;
@@ -362,48 +392,18 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.shelbylabel1});
+            this.VerLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 420);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(738, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // shelbylabel1
+            // VerLabel
             // 
-            this.shelbylabel1.Name = "shelbylabel1";
-            this.shelbylabel1.Size = new System.Drawing.Size(134, 17);
-            this.shelbylabel1.Text = "Developed By Shelby <3";
-            // 
-            // xbdmReturn
-            // 
-            this.xbdmReturn.Location = new System.Drawing.Point(638, 339);
-            this.xbdmReturn.Name = "xbdmReturn";
-            this.xbdmReturn.Size = new System.Drawing.Size(86, 45);
-            this.xbdmReturn.TabIndex = 13;
-            this.xbdmReturn.Text = "Return";
-            this.xbdmReturn.UseVisualStyleBackColor = true;
-            this.xbdmReturn.Click += new System.EventHandler(this.xbdmReturn_Click);
-            // 
-            // jrpcReturn
-            // 
-            this.jrpcReturn.Location = new System.Drawing.Point(638, 339);
-            this.jrpcReturn.Name = "jrpcReturn";
-            this.jrpcReturn.Size = new System.Drawing.Size(86, 45);
-            this.jrpcReturn.TabIndex = 14;
-            this.jrpcReturn.Text = "Return";
-            this.jrpcReturn.UseVisualStyleBackColor = true;
-            this.jrpcReturn.Click += new System.EventHandler(this.jrpcReturn_Click);
-            // 
-            // launchReturn
-            // 
-            this.launchReturn.Location = new System.Drawing.Point(636, 339);
-            this.launchReturn.Name = "launchReturn";
-            this.launchReturn.Size = new System.Drawing.Size(86, 45);
-            this.launchReturn.TabIndex = 14;
-            this.launchReturn.Text = "Return";
-            this.launchReturn.UseVisualStyleBackColor = true;
-            this.launchReturn.Click += new System.EventHandler(this.launchReturn_Click);
+            this.VerLabel.Name = "VerLabel";
+            this.VerLabel.Size = new System.Drawing.Size(105, 17);
+            this.VerLabel.Text = "BadStick .ini Editor";
             // 
             // inieditor
             // 
@@ -440,7 +440,7 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel shelbylabel1;
+        private System.Windows.Forms.ToolStripStatusLabel VerLabel;
         private FastColoredTextBoxNS.FastColoredTextBox launchinieditor;
         private System.Windows.Forms.Button launchiniOpen;
         private System.Windows.Forms.Button launchiniClear;

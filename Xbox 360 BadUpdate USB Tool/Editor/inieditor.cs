@@ -23,7 +23,7 @@ namespace Xbox_360_BadStick
         public inieditor()
         {
             InitializeComponent();
-            shelbylabel1.Text = "BadStick " + Form1.currentver + " Created By Shelby <3";
+            VerLabel.Text = "BadStick " + Form1.currentver + "";
             TopMost = true;
         }
 

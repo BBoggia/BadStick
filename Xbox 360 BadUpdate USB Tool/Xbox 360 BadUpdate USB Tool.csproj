@@ -47,9 +47,11 @@
       <HintPath>..\packages\Costura.Fody.6.0.0\lib\netstandard2.0\Costura.dll</HintPath>
     </Reference>
     <Reference Include="FastColoredTextBox">
-      <HintPath>..\..\..\..\..\FastColoredTextBox.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Project Revive\misc\3-23-24 RGStarter Source (V6.0) (C)\Xbox USB Utility\bin\Release\Confused\FastColoredTextBox.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -123,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BadStick Icon.ico" />
+    <None Include="Resources\xbox-360-logo-png-transparent.png" />
     <None Include="Resources\BadStick Tilted.png" />
     <None Include="Resources\bugif.gif" />
     <None Include="Resources\Xbox_logo.png" />

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Management;
 using System.Net.Http;
 using System.Reflection.Emit;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
@@ -52,11 +53,12 @@ namespace Xbox_360_BadUpdate_USB_Tool
             InitializeComponent();
             InitializeCheckBoxDict();
             LoadUsbDrives();
-            ShelbyLabel.Text = "BadStick " + Form1.currentver + " Created By Shelby <3";
+            VerLabel.Text = "BadStick " + Form1.currentver + "";
 
             if (!IsRunAsAdmin())
             {
-                skipformatToggle.Enabled = true;
+                skipformatToggle.Enabled = false;
+                skipformatToggle.Checked = true;
             }
         }
 
@@ -239,6 +241,7 @@ namespace Xbox_360_BadUpdate_USB_Tool
             new PackageInfo { FileName = "Payload-XeUnshackle.zip", CheckBoxName = "badavatarToggle", DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/packages/Payload-XeUnshackle.zip" },
             new PackageInfo { FileName = "BUPayload-XeUnshackle.zip", CheckBoxName = "xeunshackleToggle", DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/packages/BUPayload-XeUnshackle.zip" },
             new PackageInfo { FileName = "ABadAvatarHDD.zip", CheckBoxName = "badavatarhddToggle", DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/packages/ABadAvatarHDD.zip" },
+            new PackageInfo { FileName = "ABadMemUnit0.zip", CheckBoxName = "abadmemunitToggle", DownloadUrl = "https://github.com/LxcyDr0p/BadStick/releases/download/packages/ABadMemUnit0.zip" },
             new PackageInfo { FileName = "BUPayload-FreeMyXe.zip", CheckBoxName = "freemyxeToggle", DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/packages/BUPayload-FreeMyXe.zip" },
             new PackageInfo { FileName = "RBB.zip", CheckBoxName = null, DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/RBB/RBB.zip" },
             new PackageInfo { FileName = "Viper360.zip", CheckBoxName = "Viper360Toggle", DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/packages/Viper360.zip" },
@@ -262,6 +265,11 @@ namespace Xbox_360_BadUpdate_USB_Tool
             new PackageInfo { FileName = "XBLS.zip", CheckBoxName = "XBLSToggle", DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/packages/XBLS.zip" },
             new PackageInfo { FileName = "Xbox.One.Files.zip", CheckBoxName = "XB1Toggle", DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/packages/Xbox.One.Files.zip" },
             new PackageInfo { FileName = "XEFU.Spoofer.zip", CheckBoxName = "xefuToggle", DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/packages/XEFU.Spoofer.zip" },
+            new PackageInfo { FileName = "Boot.Animations.zip", CheckBoxName = "bootanimpackToggle", DownloadUrl = "https://github.com/LxcyDr0p/BadStick/releases/download/packages/Boot.Animations.zip" },
+            new PackageInfo { FileName = "HvP2.zip", CheckBoxName = "hvp2Toggle", DownloadUrl = "https://github.com/LxcyDr0p/BadStick/releases/download/packages/HvP2.zip" },
+            new PackageInfo { FileName = "hiddriver360.zip", CheckBoxName = "hiddriverToggle", DownloadUrl = "https://github.com/LxcyDr0p/BadStick/releases/download/packages/hiddriver360.zip" },
+            new PackageInfo { FileName = "xbPirate.zip", CheckBoxName = "xbpirateToggle", DownloadUrl = "https://github.com/LxcyDr0p/BadStick/releases/download/packages/xbpirate.zip" },
+            new PackageInfo { FileName = "fakeAnim.zip", CheckBoxName = "fakeanimToggle", DownloadUrl = "https://github.com/LxcyDr0p/BadStick/releases/download/packages/FakeAnim.zip" },
             new PackageInfo { FileName = "xbNetwork.zip", CheckBoxName = "xbNetworkToggle", DownloadUrl = "https://github.com/32BitKlepto/BadStick/releases/download/packages/xbNetwork.zip" }
         };
         private void InitializeCheckBoxDict()
@@ -270,6 +278,7 @@ namespace Xbox_360_BadUpdate_USB_Tool
             {
                 { "AuroraToggle", AuroraToggle },
                 { "FSDToggle", FSDToggle },
+                { "bootanimpackToggle", bootanimpackToggle },
                 { "EmeraldToggle", EmeraldToggle },
                 { "FFPlayToggle", FFPlayToggle },
                 { "GODUnlockerToggle", GODUnlockerToggle },
@@ -300,22 +309,16 @@ namespace Xbox_360_BadUpdate_USB_Tool
                 { "xbNetworkToggle", xbNetworkToggle },
                 { "badavatarToggle", badavatarToggle },
                 { "badavatarhddToggle", badavatarhddToggle },
+                { "abadmemunitToggle", abadmemunitToggle },
+                { "fakeanimToggle", fakeanimToggle },
+                { "hvp2Toggle", hvp2Toggle },
+                { "hiddriverToggle", hiddriverToggle },
+                { "xbpirateToggle", xbpirateToggle },
                 { "xeunshackleToggle", xeunshackleToggle }
             };
         }
 
         private Dictionary<string, CheckBox> _excludedFromSelectAll;
-
-        private void InitializeExcludedCheckBoxes()
-        {
-            _excludedFromSelectAll = new Dictionary<string, CheckBox>
-            {
-                { "xeunshackleToggle", xeunshackleToggle },
-                { "skipformatToggle", skipformatToggle },
-                { "skipxexmenuToggle", skipxexmenuToggle },
-                { "skipmainfilesToggle", skipmainfilesToggle }
-            };
-        }
 
         private List<PackageInfo> GetSelectedPackages()
         {
@@ -519,7 +522,7 @@ namespace Xbox_360_BadUpdate_USB_Tool
 
         private async void StartBtn_Click(object sender, EventArgs e)
         {
-            if (badavatarToggle.Checked == true && badupdateToggle.Checked == true)
+            if (badavatarToggle.Checked == true && badupdateToggle.Checked == true && abadmemunitToggle.Checked == true && badavatarhddToggle.Checked == true)
             {
                 MessageBox.Show("Please select only one exploit method.", "BadStick Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -647,25 +650,61 @@ namespace Xbox_360_BadUpdate_USB_Tool
 
             await DownloadAndExtractPackagesAsync(packagesToDownload, _checkBoxDict, usbPath, progress);
 
-            UpdateStatus("Status: Done! USB Ready.");
+            UpdateStatus("Status: Done! Device Ready.");
             ProgressBar.Value = 100;
-            MessageBox.Show(this, "Done. Your USB is ready to go, thank you for using BadStick. Now go hax that xbox!11!!111!!1!11!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            MessageBox.Show(this, "BadStick has finished setting up your device. Any packages you have included with your install have been neatly arranged on your device.", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Thread.Sleep(500);
             await CountdownExitStatusAsync();
         }
-
-
-
-
 
         private void SelectAllToggle_CheckedChanged(object sender, EventArgs e)
         {
             bool checkAll = SelectAllToggle.Checked;
 
+            if (!checkAll)
+            {
+                skipmainfilesToggle.Checked = false;
+                skipmainfilesToggle.Enabled = true;
+                skiprbbToggle.Checked = false;
+                skiprbbToggle.Enabled = true;
+                skipxexmenuToggle.Checked = false;
+                skipxexmenuToggle.Enabled = true;
+            }
+            else
+            {
+                skipmainfilesToggle.Checked = true;
+                skipmainfilesToggle.Enabled = false;
+                skiprbbToggle.Checked = false;
+                skiprbbToggle.Enabled = false;
+                skipxexmenuToggle.Checked = false;
+                skipxexmenuToggle.Enabled = false;
+            }
+
             foreach (var kvp in _checkBoxDict)
             {
                 kvp.Value.Checked = checkAll;
+                kvp.Value.Enabled = true;
             }
+
+            // Disable exploit / patch options
+            badupdateToggle.Checked = false;
+            badavatarToggle.Checked = false;
+            badavatarhddToggle.Checked = false;
+            abadmemunitToggle.Checked = false;
+            xeunshackleToggle.Checked = false;
+            freemyxeToggle.Checked = false;
+
+            badupdateToggle.Enabled = !checkAll;
+            badavatarToggle.Enabled = !checkAll;
+            badavatarhddToggle.Enabled = !checkAll;
+            abadmemunitToggle.Enabled = !checkAll;
+            xeunshackleToggle.Enabled = !checkAll;
+            freemyxeToggle.Enabled = !checkAll;
+
+            // Skip options follow SelectAll
+            skipxexmenuToggle.Enabled = !checkAll;
+            skiprbbToggle.Enabled = !checkAll;
         }
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
@@ -685,22 +724,10 @@ namespace Xbox_360_BadUpdate_USB_Tool
                 " temporarily brick your nand, and you would then have to perform a RGH to revive it.", "Where is Dashlaunch?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void skipmainQ_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            MessageBox.Show("Enabling this will skip the main files that BadStick installs by default (Rock Band" +
-                " Blitz, the payload, and XeXMenu V1.2). This is useful if you already have your USB setup for the " +
-                "Bad Update exploit and only want to install other packages.", "What Is This?", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void skipformatQ_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             MessageBox.Show("Enabling this will skip the format process entirely, in case" +
                 " you don't want to format the drive at all (recommended regardless).", "What Is This?", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void discordserverBtn_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://discord.gg/xMbKazpkvf");
         }
 
         private void badstickredditBtn_Click(object sender, EventArgs e)
@@ -728,6 +755,7 @@ namespace Xbox_360_BadUpdate_USB_Tool
                 badupdateToggle.Enabled = true;
                 badavatarToggle.Enabled = true;
                 badavatarhddToggle.Enabled = true;
+                abadmemunitToggle.Enabled = true;
                 return;
             }
             else
@@ -744,8 +772,15 @@ namespace Xbox_360_BadUpdate_USB_Tool
                 badavatarToggle.Checked = false;
                 badavatarhddToggle.Enabled = false;
                 badavatarhddToggle.Checked = false;
+                abadmemunitToggle.Enabled = false;
+                abadmemunitToggle.Checked = false;
                 return;
             }
+
+            bool enable = skipmainfilesToggle.Checked;
+
+            skipxexmenuToggle.Enabled = enable;
+            skiprbbToggle.Enabled = enable;
         }
 
         private void xeunshackleToggle_CheckedChanged(object sender, EventArgs e)
@@ -792,12 +827,6 @@ namespace Xbox_360_BadUpdate_USB_Tool
             }
         }
 
-        private void fakedonateBtn_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Just kidding. I don't want your donations. Your support and appreciation is " +
-                "all that matters to me. I hope you all enjoy :D", "i no want ur money >:(", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void editorBtn_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -809,14 +838,6 @@ namespace Xbox_360_BadUpdate_USB_Tool
         {
             MessageBox.Show("This will install all of the packages included within BadStick " +
                 "and install XeUnshackle by default (which is recommended to begin with).", "What Is This?", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void noticeLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            MessageBox.Show("It is highly recommended that you install XeUnshackle version of the " +
-                "BadUpdate payload, as this is far more reliable and stable than FreeMyXe. You will " +
-                "also not have to manually patch executable files (.xex/.xbes) manually. (Thank you to @jimdude7404 " +
-                "on Discord for pointing that out to me! :)", "Recommended", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 
@@ -872,6 +893,62 @@ namespace Xbox_360_BadUpdate_USB_Tool
                 xeunshackleToggle.Enabled = false;
                 freemyxeToggle.Checked = false;
                 xeunshackleToggle.Checked = false;
+            }
+        }
+
+        private void abadmemunitToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!abadmemunitToggle.Checked)
+            {
+
+                skiprbbToggle.Enabled = true;
+                skiprbbToggle.Checked = false;
+                xeunshackleToggle.Enabled = true;
+                freemyxeToggle.Enabled = true;
+            }
+            else
+            {
+                skiprbbToggle.Checked = true;
+                skiprbbToggle.Enabled = false;
+                freemyxeToggle.Enabled = false;
+                xeunshackleToggle.Enabled = false;
+                freemyxeToggle.Checked = false;
+                xeunshackleToggle.Checked = false;
+            }
+        }
+
+        private void wipetempBtn_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(
+                    "Are You Sure You Want To Delete ./temp And Everything Inside It?",
+                    "BadStick Confirmation",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                if (Directory.Exists("./temp"))
+                    Directory.Delete("./temp", true);
+            }
+        }
+
+        private void deleteselfBtn_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(
+                "Are You Sure You Want To Delete This Program?",
+                "Confirm Self Delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                string exePath = Application.ExecutablePath;
+
+                Process.Start(new ProcessStartInfo()
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/C timeout 2 > nul & del \"{exePath}\"",
+                    CreateNoWindow = true,
+                    UseShellExecute = false
+                });
+
+                Application.Exit();
             }
         }
     }
