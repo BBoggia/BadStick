@@ -1,5 +1,10 @@
 # BadStick — The Xbox 360 BadUpdate Device Setup Tool
 ![BadStick V1.5-Stable](https://i.imgur.com/3qz14fn.png)
+### BadStick Windows 10+ Requirements
+- .Net Framework v4.8.1 [https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481](url)
+### BadStick Windows 8.1/8/7 Requirements
+- .Net Framework v4.6.1 [https://dotnet.microsoft.com/en-us/download/dotnet-framework/net461](url)
+
 ### What Is BadStick?
 - BadStick is an AIO (All-in-one) tool, meaning you get everything you need packed into one tool that does all the work for you  
 - Designed for both beginners who don't know what they are doing and experienced users who want to save time
@@ -25,11 +30,6 @@
 - Requires **no hardware modification or flashing**, making it a purely software-based exploit  
 - Little to no risk by user when compared to hardmodding a system 
 - Enables users to run unsigned code, custom dashboards, and various homebrew applications (**in a _semi-tethered_ state**)  
-
-### BadStick Windows 10+ Requirements
-- .Net Framework v4.8.1 [https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481](url)
-### BadStick Windows 8.1/8/7 Requirements
-- .Net Framework v4.6.1 [https://dotnet.microsoft.com/en-us/download/dotnet-framework/net461](url)
 
 BadUpdate GitHub Page:  
 https://github.com/grimdoomer/Xbox360BadUpdate
