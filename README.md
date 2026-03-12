@@ -2,7 +2,7 @@
 ![BadStick V1.5-Stable](https://i.imgur.com/3qz14fn.png)
 ### BadStick Windows 10+ Requirements
 - .Net Framework v4.8.1 [https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481](url)
-### BadStick Windows 8.1/8/7 Requirements
+### BadStick Legacy Windows 8.1/8/7 Requirements
 - .Net Framework v4.6.1 [https://dotnet.microsoft.com/en-us/download/dotnet-framework/net461](url)
 
 ### What Is BadStick?
