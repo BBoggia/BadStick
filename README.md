@@ -26,6 +26,11 @@
 - Little to no risk by user when compared to hardmodding a system 
 - Enables users to run unsigned code, custom dashboards, and various homebrew applications (**in a _semi-tethered_ state**)  
 
+### BadStick Windows 10+ Requirements
+- .Net Framework v4.8.1 [https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481](url)
+### BadStick Windows 8.1/8/7 Requirements
+- .Net Framework v4.6.1 [https://dotnet.microsoft.com/en-us/download/dotnet-framework/net461](url)
+
 BadUpdate GitHub Page:  
 https://github.com/grimdoomer/Xbox360BadUpdate
 
