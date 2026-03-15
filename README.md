@@ -12,30 +12,17 @@
 
 ---
 
-### Key Features
-
-- **Device Formatting**
-  - Automatically formats any Fat32 compatible device to FAT32 with the correct partition and file system configuration required by the Xbox 360  
-- **BadUpdate Exploit Variations**
-  - Installs the BadUpdate exploit via the method of your choosing  
-  - Automatically configures the exploit based on which method you select  
-- **Package Installer**
-  - Allows users to select additional homebrew applications and/or included in the tool alongside the exploit
-- **Configuration File Editing**
-  - Modify your JRPC, XBDM or Dashlaunch configs easily with the built in config editor 
-
----
-
 ### About the BadUpdate Exploit
 - Exploits a vulnerability in the game update process to load unsigned code and homebrew  
 - Requires **no hardware modification or flashing**, making it a purely software-based exploit  
 - Little to no risk by user when compared to hardmodding a system 
-- Enables users to run unsigned code, custom dashboards, and various homebrew applications (**in a _semi-tethered_ state**)  
+- Enables users to run unsigned code, custom dashboards, and various homebrew applications (**in a _semi-tethered_ state**)
 
 BadUpdate GitHub Page:  
 https://github.com/grimdoomer/Xbox360BadUpdate
 
+---
 
-## Other Information
+### Other Information
 
 BadStick was created as a **free and open source project** to make it easier for users to run the BadUpdate exploit and to help others learn how the process works. With that said, **you do not have permission to reupload this project or integrate it into other programs without explicit permission**. I fully support people learning from the source code, but I do not support others redistributing or rebranding my work as their own. If you would like to use BadStick in another project, simply ask first — I’m usually happy to allow it.
