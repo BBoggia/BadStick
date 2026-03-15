@@ -13,10 +13,12 @@
 ---
 
 ### About the BadUpdate Exploit
-- Exploits a vulnerability in the game update process to load unsigned code and homebrew  
+- Entry-Point based designed to exploit a HV vulnerability to gain full code exec
 - Requires **no hardware modification or flashing**, making it a purely software-based exploit  
 - Little to no risk by user when compared to hardmodding a system 
-- Enables users to run unsigned code, custom dashboards, and various homebrew applications (**in a _semi-tethered_ state**)
+- Enables users to run unsigned code, custom dashboards, and various homebrew applications
+- Exploit is known as "Semi-Tethered" meaning custom code execution is achieved without kernel patches being applied.
+- Anytime the powerstate is changed, the exploit must be ran again. E.g: rebooting/shuttingdown
 
 BadUpdate GitHub Page:  
 https://github.com/grimdoomer/Xbox360BadUpdate
