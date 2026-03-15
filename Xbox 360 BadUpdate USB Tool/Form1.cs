@@ -1,186 +1,225 @@
-﻿using System;
+﻿using FastColoredTextBoxNS;
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Xml.Linq;
 namespace Xbox_360_BadUpdate_USB_Tool
 {
-
     public partial class Form1 : Form
     {
-        public bool IsRunAsAdmin()
+        public static string currentver = "v2.0-Stable";
+        public static bool devmode = false;
+        public static string ChkIntStatus;
+        public static string ChkAdminStatus;
+        public static string ChkComStatus;
+        public Form1() { InitializeComponent(); VerLabel.Text = "BadStick " + Form1.currentver + ""; }
+        public bool IsRanAsAdmin()
         {
-            using (var identity = WindowsIdentity.GetCurrent())
-            {
-                var principal = new WindowsPrincipal(identity);
-                return principal.IsInRole(WindowsBuiltInRole.Administrator);
-            }
+            startupProgressBar.Value = 90;
+            startupLabel.Text = "Status - Checking for administrator privileges...";
+            using (var identity = WindowsIdentity.GetCurrent()) {  var principal = new WindowsPrincipal(identity); return principal.IsInRole(WindowsBuiltInRole.Administrator); }
         }
-
-        public static string currentver = "v1.5-Stable";
-
-        public static async Task<bool> IsInternetAvailableAsync()
-        {
-            try
-            {
-                using (var http = new HttpClient())
-                {
-                    http.Timeout = TimeSpan.FromSeconds(3);
-                    http.DefaultRequestHeaders.UserAgent.ParseAdd("BadStick-Checker/1.0");
-
-                    var response = await http.GetAsync("https://www.google.com");
-                    return response.IsSuccessStatusCode;
-                }
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         private async Task ComMSG()
         {
             try
             {
+                startupProgressBar.Value = 30;
+                startupLabel.Text = "Status - Checking for community messages...";
                 using (var http = new HttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(5);
                     http.DefaultRequestHeaders.UserAgent.ParseAdd("BadStick-Updater/1.0");
                     string state = await http.GetStringAsync("https://pastebin.com/raw/sEsrQJve");
+                    startupProgressBar.Value = 50;
                     state = state.Trim().ToLowerInvariant();
-
                     if (state == "true")
                     {
                         string messageText = await http.GetStringAsync("https://pastebin.com/raw/aJzwnQN4");
+                        startupProgressBar.Value = 75;
                         messageText = messageText.Trim();
-
-                        MessageBox.Show(messageText, "Community Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(
+                            messageText,
+                            "Community Notice",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error retrieving message from server:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show($"Error checking for community messages:\n{ex.Message}", "Message Check Failed", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
+        private async Task<bool> IsInternetAvailableAsync()
+        {
+            try
+            {
+                startupLabel.Text = "Status - Checking for internet availability...";
+                startupProgressBar.Value = 5;
+                using (var http = new HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromSeconds(3);
+                    http.DefaultRequestHeaders.UserAgent.ParseAdd("BadStick-Checker/1.0");
+                    var response = await http.GetAsync("https://www.google.com");
+                    startupProgressBar.Value = 25;
+                    return response.IsSuccessStatusCode;
+                }
+            }
+            catch { return false; }
+        }
+        private string GetWindowsVersionName()
+        {
+            Version osVer = Environment.OSVersion.Version;
+            startupLabel.Text = "Status - Checking Windows version...";
+            if (osVer.Major == 6 && osVer.Minor == 1) return "Windows 7";
+            if (osVer.Major == 6 && osVer.Minor == 2) return "Windows 8";
+            if (osVer.Major == 6 && osVer.Minor == 3) return "Windows 8.1";
+            if (osVer.Major == 10 && osVer.Build < 22000) return "Windows 10";
+            if (osVer.Major == 10 && osVer.Build >= 22000) return "Windows 11";
 
+            return "Unknown Windows Version";
+        }
         public async Task CheckForUpdatesAsync()
         {
             bool internetAvailable = await IsInternetAvailableAsync();
-            if (!internetAvailable)
-            {
-                MessageBox.Show("No internet connection detected. The application will continue without update check.",
-                    "No Internet", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
+            startupLabel.Text = "Status - Checking internet availability...";
             try
             {
                 using (var http = new HttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(5);
                     http.DefaultRequestHeaders.UserAgent.ParseAdd("BadStick-Updater/1.0");
-
                     string latestVersion = await http.GetStringAsync("https://pastebin.com/raw/SHpqTNY0");
                     latestVersion = latestVersion.Trim();
-
                     if (latestVersion != currentver)
                     {
-                        var result = MessageBox.Show(
-                            $"An update for BadStick is available!\n\nYour Version: {currentver}\nLatest Version: {latestVersion}\n\nWould you like to update now?",
-                            "Update Available",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Information);
-
-                        if (result == DialogResult.Yes)
-                        {
-                            System.Diagnostics.Process.Start("https://github.com/LxcyDr0p/BadStick");
-                        }
+                        startupProgressBar.Value = 100;
+                        ContinueBtn.Enabled = true;
+                        noadminWarning.Visible = true;
+                        ContinueBtn.Text = "Update";
+                        startupLabel.Text = "Update Available!";
+                        warningTip.SetToolTip(noadminWarning, "There is an update available for BadStick, please update to the latest version.");
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error checking for updates:\n{ex.Message}", "Update Check Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show($"Error checking for updates:\n{ex.Message}", "Update Check Failed", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
-
-        public Form1()
+        private void ExitBtn_Click(object sender, EventArgs e) { Application.Exit(); }
+        private void Update()
         {
-            InitializeComponent();
-            VerLabel.Text = "BadStick " + Form1.currentver + "";
-            _ = ComMSG();
-        }
+            try
+            {
+                string exePath = Application.ExecutablePath;
+                string exeDir = Application.StartupPath;
+                string windowsName = GetWindowsVersionName();
+                bool isLegacyOS = windowsName.StartsWith("Windows 7") || windowsName.StartsWith("Windows 8");
+                string apiUrl = "https://api.github.com/repos/LxcyDr0p/BadStick/releases/latest";
+                using (var wcJson = new System.Net.WebClient())
+                {
+                    wcJson.Headers.Add("User-Agent", "BadStick-Updater");
+                    string json = wcJson.DownloadString(apiUrl);
+                    dynamic release = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                    string tagName = release.tag_name;
+                    string downloadUrl = null;
+                    foreach (var asset in release.assets)
+                    {
+                        string name = asset.name.Value;
+                        if (isLegacyOS && name.Contains("Legacy")) {  downloadUrl = asset.browser_download_url.Value; break; }
+                        else if (!isLegacyOS && !name.Contains("Legacy")) { downloadUrl = asset.browser_download_url.Value; break; }
+                    }
+                    if (downloadUrl == null)
+                        throw new Exception("No suitable asset found for this OS in latest release.");
+                    startupLabel.Text = windowsName + " detected, installing compatible version...";
+                    MessageBox.Show(
+                        $"Detected {windowsName} — Downloading {tagName}",
+                        "Updater",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    string psScript = string.Format(@"
+try {{
+    Write-Host '[BadStick] Downloading update...'
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $wc = New-Object System.Net.WebClient
+    $wc.DownloadFile('{0}','update.zip')
 
-        private void CreditsBtn_Click(object sender, EventArgs e)
+    Write-Host '[BadStick] Extracting update...'
+    if (Test-Path 'UpdateTemp') {{ Remove-Item 'UpdateTemp' -Recurse -Force }}
+    Expand-Archive -Path 'update.zip' -DestinationPath 'UpdateTemp' -Force
+
+    Remove-Item 'update.zip' -Force
+    Copy-Item 'UpdateTemp\\*' -Destination '.' -Recurse -Force
+    Remove-Item 'UpdateTemp' -Recurse -Force
+
+    Write-Host '[BadStick] Launching updated application...'
+    Start-Process -FilePath '{1}'
+}} catch {{
+    $_ | Out-File 'updater.log' -Encoding UTF8
+    Write-Host 'Update failed — check updater.log'
+    exit 1
+}}
+", downloadUrl, exePath);
+
+                    string psPath = Path.Combine(exeDir, "updater.ps1");
+                    File.WriteAllText(psPath, psScript);
+                    string batContent = string.Format(@"
+@echo off
+powershell -NoProfile -ExecutionPolicy Bypass -File ""{0}""
+del %0
+", psPath);
+                    string batPath = Path.Combine(exeDir, "updater.bat");
+                    File.WriteAllText(batPath, batContent);
+                    Process.Start(new ProcessStartInfo() { FileName = batPath, UseShellExecute = true, CreateNoWindow = false });
+                    Application.Exit();
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("Updater failed:\n\n" + ex.Message);  }
+        }
+        private async void ContinueBtn_Click(object sender, EventArgs e)
+        {
+            if (ContinueBtn.Text == "Update") { ContinueBtn.Enabled = false; Update(); }
+            else { this.Hide(); Form2 Next = new Form2(); Next.Show(); }
+        }
+        private void creditsLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             MessageBox.Show("This is for everyone who worked tirelessly to develop and bring BadUpdate to the community. " +
                 "Thank you to everyone for your undying dedication and devotion to this community. " +
                 "\n\n\nBadStick Developers & Creators:\n" +
-                "- Shelby (@1xShelby / Klepto) \n- Lxcy_Dr0p\n\n\nBadUpdate Exploit Credits:\n" +
+                "- Shelby\n- Lxcy_Dr0p\n\n\nBadUpdate Exploit Credits:\n" +
                 "- Grimdoomer (Ryan Miceli)\n- InvoxiPlayGames (Emma)\n- kmx360 (Mate Kukri)\n\n\n" +
-                "Bill Gates (no jk. fuck you bill microdick)\n\n" +
-                "And thank you to all of the homebrew developers for bringing such " +
-                "programs and tools to the community. Your work has done so much over" +
+                "Of course, thank you to all of the homebrew developers for bringing such " +
+                "programs and tools to the community. Your work has done so much over " +
                 "the last 20 years for everyone in this community. You are all legends." +
-                "\n\n Honorable Mentions:\n" +
+                "\n\n Deserved Honorable Mentions:\n" +
                 "- MrMario2011\n" +
                 "- ModdedWarfare\n" +
-                "- Sharkys Customs / DavisorNaw\n" +
-                "- Modern Vintage Gamer" + 
+                "- Sharkys Customs / DavisOrNaw\n" +
+                "- Modern Vintage Gamer" +
                 "- Element18592", "Credits Where They Are Due <3", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
-        private void ExitBtn_Click(object sender, EventArgs e)
+        private async void Form1_Shown(object sender, EventArgs e)
         {
-            Application.Exit();
-        }
-
-        private async void ContinueBtn_Click(object sender, EventArgs e)
-        {
+            if (devmode == true) { devbypassBtn.Visible = true; devbypassBtn.Enabled = true; }
+            ContinueBtn.Enabled = false;
+            startupProgressBar.Value = 0;
+            bool isAdmin = IsRanAsAdmin();
+            bool hasInternet = await IsInternetAvailableAsync();
             try
             {
-                if (!IsRunAsAdmin())
-                {
-                    MessageBox.Show("This program was not ran as an Administrator. You will not be able to format any USB device.", "No Admin", MessageBoxButtons.OK, MessageBoxIcon.Error);                  
-                }              
+                if (!hasInternet) { fatalError.Visible = true; warningTip.SetToolTip(fatalError, "No internet access detected, some features may be unavailable."); return; }
+                await CheckForUpdatesAsync();
+                if (ContinueBtn.Text == "Update") { return; }
+                await ComMSG();
+                if (!isAdmin) { noadminWarning.Visible = true; warningTip.SetToolTip(noadminWarning, "BadStick not run as administrator, formatting will be disabled."); }            
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error has occured:\n\n" + ex.Message, "BadStick Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                fatalError.Visible = true;
+                startupLabel.Text = "An error occurred during startup: " + ex.Message;
             }
-
-            bool hasInternet = await IsInternetAvailableAsync();
-            if (!hasInternet)
-            {
-                MessageBox.Show("No internet connection detected. The application will now exit.",
-                                "No Internet", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-                return;
-            }
-            else
-            {
-                try
-                {
-                    await CheckForUpdatesAsync();
-                }
-                catch
-                {
-                    MessageBox.Show("Error: Unable to check for program updates.", "BadStick Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                this.Hide();
-                Form2 Next = new Form2();
-                Next.Show();
-            }
+            startupProgressBar.Value = 100;
+            startupLabel.Text = "Welcome to BadStick!";
+            ContinueBtn.Enabled = true;
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-    }
+        private void devbypassBtn_Click(object sender, EventArgs e) { this.Hide(); Form2 Next = new Form2(); Next.Show(); }}
 }
